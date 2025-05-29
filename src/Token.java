@@ -1,0 +1,21 @@
+public enum Token {
+    // Palavras reservadas
+    MAIN, INT, FLOAT, CHAR, IF, ELSE, WHILE, DO, FOR,
+
+    // Identificadores e as    constantes
+    IDENTIFIER, INTEGER_CONST, FLOAT_CONST, CHAR_CONST,
+
+    // Operadores
+    PLUS, MINUS, MULTIPLY, DIVIDE,
+    LESS_THAN, LESS_EQUAL, GREATER_THAN, GREATER_EQUAL,
+    EQUAL, NOT_EQUAL,
+
+    // marcadores
+    LPAREN, RPAREN, LBRACE, RBRACE, COMMA, SEMICOLON,
+
+    // Comentarios
+    LINE_COMMENT, BLOCK_COMMENT, EOF,
+
+    // Erros Lexicos 
+    INVALID_CHAR, UNTERMINATED_COMMENT, INVALID_CHAR_CONST, INVALID_FLOAT, ISOLATED_EXCLAMATION
+}
