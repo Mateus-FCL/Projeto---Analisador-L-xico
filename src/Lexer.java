@@ -69,6 +69,126 @@ public class Lexer {
                 default: return new TokenInfo(palavra, Token.IDENTIFIER, linha, startCol);
             }
         }
+
+        if (isDigit(currentChar)) {
+            StringBuilder lexema = new StringBuilder();
+            boolean isFloat = false;
+            do {
+                lexema.append((char) currentChar);
+                advance();
+            } while (isDigit(currentChar));
+
+            if (currentChar == '.') {
+                isFloat = true;
+                lexema.append('.');
+                advance();
+                if (!isDigit(currentChar)) {
+                    return new TokenInfo(lexema.toString(), Token.INVALID_FLOAT, linha, startCol);
+                }
+                while (isDigit(currentChar)) {
+                    lexema.append((char) currentChar);
+                    advance();
+                }
+            }
+
+            return new TokenInfo(lexema.toString(),
+                    isFloat ? Token.FLOAT_CONST : Token.INTEGER_CONST,
+                    linha, startCol);
+        }
+
+        if (currentChar == '\'') {
+            StringBuilder lexema = new StringBuilder();
+            lexema.append((char) currentChar);
+            advance();
+
+            if (currentChar == '\'' || currentChar == '\n' || currentChar == -1) {
+                return new TokenInfo(lexema.toString(), Token.INVALID_CHAR_CONST, linha, startCol);
+            }
+
+            lexema.append((char) currentChar);
+            advance();
+
+            if (currentChar != '\'') {
+                return new TokenInfo(lexema.toString(), Token.INVALID_CHAR_CONST, linha, startCol);
+            }
+
+            lexema.append((char) currentChar);
+            advance();
+
+            return new TokenInfo(lexema.toString(), Token.CHAR_CONST, linha, startCol);
+        }
+
+        if (currentChar == '/') {
+            advance();
+            if (currentChar == '/') {
+                while (currentChar != '\n' && currentChar != -1) {
+                    advance();
+                }
+                return new TokenInfo("//", Token.LINE_COMMENT, linha, startCol);
+            } else if (currentChar == '*') {
+                advance();
+                while (true) {
+                    if (currentChar == -1) {
+                        return new TokenInfo("/*", Token.UNTERMINATED_COMMENT, linha, startCol);
+                    } else if (currentChar == '*') {
+                        advance();
+                        if (currentChar == '/') {
+                            advance();
+                            return new TokenInfo("/*...*/", Token.BLOCK_COMMENT, linha, startCol);
+                        }
+                    } else {
+                        advance();
+                    }
+                }
+            } else {
+                return new TokenInfo("/", Token.DIVIDE, linha, startCol);
+            }
+        }
+
+        switch (currentChar) {
+            case '+': advance(); return new TokenInfo("+", Token.PLUS, linha, startCol);
+            case '-': advance(); return new TokenInfo("-", Token.MINUS, linha, startCol);
+            case '*': advance(); return new TokenInfo("*", Token.MULTIPLY, linha, startCol);
+            case '<':
+                advance();
+                if (currentChar == '=') {
+                    advance();
+                    return new TokenInfo("<=", Token.LESS_EQUAL, linha, startCol);
+                }
+                return new TokenInfo("<", Token.LESS_THAN, linha, startCol);
+            case '>':
+                advance();
+                if (currentChar == '=') {
+                    advance();
+                    return new TokenInfo(">=", Token.GREATER_EQUAL, linha, startCol);
+                }
+                return new TokenInfo(">", Token.GREATER_THAN, linha, startCol);
+            case '=':
+                advance();
+                if (currentChar == '=') {
+                    advance();
+                    return new TokenInfo("==", Token.EQUAL, linha, startCol);
+                }
+                return new TokenInfo("=", Token.INVALID_CHAR, linha, startCol);
+            case '!':
+                advance();
+                if (currentChar == '=') {
+                    advance();
+                    return new TokenInfo("!=", Token.NOT_EQUAL, linha, startCol);
+                }
+                return new TokenInfo("!", Token.ISOLATED_EXCLAMATION, linha, startCol);
+        }
+
+        char ch = (char) currentChar;
+        advance();
+        switch (ch) {
+            case '(': return new TokenInfo("(", Token.LPAREN, linha, startCol);
+            case ')': return new TokenInfo(")", Token.RPAREN, linha, startCol);
+            case '{': return new TokenInfo("{", Token.LBRACE, linha, startCol);
+            case '}': return new TokenInfo("}", Token.RBRACE, linha, startCol);
+            case ',': return new TokenInfo(",", Token.COMMA, linha, startCol);
+            case ';': return new TokenInfo(";", Token.SEMICOLON, linha, startCol);
+        }
         return new TokenInfo(Character.toString((char) currentChar), Token.INVALID_CHAR, linha, startCol);
     }
 
