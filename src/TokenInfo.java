@@ -1,8 +1,8 @@
 public class TokenInfo {
-    private final String lexema;
-    private final Token tipoToken;
-    private final int linha;
-    private final int coluna;
+    final String lexema;
+    final Token tipoToken;
+    final int linha;
+    final int coluna;
 
     public TokenInfo(String lexema, Token tipoToken, int linha, int coluna) {
         this.lexema = lexema;
