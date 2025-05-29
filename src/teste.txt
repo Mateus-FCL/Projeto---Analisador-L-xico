@@ -1,0 +1,18 @@
+int main() {
+    int numero = 123;
+    float real = 45.67;
+    char letra = 'a';
+    if (numero > 100) {
+        numero = numero + 1;
+    } else {
+        numero = numero - 1;
+    }
+
+    // Comentário de linha
+    /* Comentário
+       de bloco */
+
+    while (numero != 0) {
+        numero = numero - 1;
+    }
+}
